@@ -23,7 +23,7 @@ library(ggplot2)
 library(caret) #enaables classfication and regression training
 library(e1071)
 
-
+#how do i not print the code #echo off
 
 ```
 
