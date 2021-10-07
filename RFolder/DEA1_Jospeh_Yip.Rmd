@@ -1,0 +1,65 @@
+---
+title: "DEA 1 - Budweiser"
+author: "Shijo Joseph & Douglas Yip"
+date: "10/6/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Budweiser
+## Executive Summary
+### This is the executive summary
+
+
+
+
+```{r load data sets}
+
+library(readr)
+Breweries <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Breweries.csv", show_col_types = FALSE) 
+View(Breweries)
+Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_types = FALSE)
+
+```
+
+
+
+
+```{r 1. How many breweries are present in each state}
+#How many Breweries are in each state?
+
+
+
+
+```
+
+
+```{r 2&3. Data Merge and clean}
+#Merge Data
+
+
+
+#Clean data
+
+
+```
+
+```{r 3. Median of alcohol content and bitterness by each state.}
+#Table and bar chart of alcohol 
+
+
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
