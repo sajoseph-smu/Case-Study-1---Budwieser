@@ -11,8 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Budweiser
 ## Executive Summary
-### The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  The insights are based on the ABV and IBU content 
-
+### The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  
+###Our insights that we are sharing are based on the ABV and IBU content by State.
+###Our review recommends that the following  opportuntities that your company should consider
+###   1) XXX
+###   2) YYY
 
 ```{r load packages}
 #load different libraries and function to enable us to complete this analysis
@@ -23,7 +26,7 @@ library(ggplot2)
 library(caret) #enaables classfication and regression training
 library(e1071)
 
-
+#how do i not print the code #echo off
 
 ```
 
@@ -31,11 +34,11 @@ library(e1071)
 #uploads the data into R to start analysis
 #shijo can you take the link of where we pull the CSV directly from Github?
 
+Breweries <- read_csv("https://raw.githubusercontent.com/sajoseph-smu/Case-Study-1---Budwieser/main/Breweries.csv", show_col_types = FALSE) 
 
-
-Breweries <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Breweries.csv", show_col_types = FALSE) 
-View(Breweries)
-Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_types = FALSE)
+summary(Breweries)
+Beers <- read_csv("https://raw.githubusercontent.com/sajoseph-smu/Case-Study-1---Budwieser/main/Beers.csv", show_col_types = FALSE)
+summary(Beers)
 
 ```
 
@@ -46,6 +49,10 @@ Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_type
 #This code will identify the number of breweries for each state
 #How many Breweries are in each state?
 
+SummaryBrewery <- Breweries %>% count(State, sort = TRUE)
+names(SummaryBrewery)[2] <- "Brewery Count"
+#Summary of Breweries 
+SummaryBrewery
 
 ```
 
@@ -54,8 +61,10 @@ Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_type
 #This code will merge the Data with assigning each beer with the brewery and location
 
 #Merge Data
-
-
+#outer join (keep all observations from both dataframes)
+names(Beers)[5] <- "Brew_ID"
+names(Breweries)[2] <- "Brewery Name"
+bbdf <- merge(Beers,Breweries, by = "Brew_ID")
 
 #Cleanse data
 #need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
@@ -85,4 +94,7 @@ Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_type
 ```
 
 
-```r 7. 
+```{r 7. Shijo magic}
+
+
+```
