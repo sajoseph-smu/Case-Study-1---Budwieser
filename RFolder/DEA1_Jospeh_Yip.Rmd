@@ -11,9 +11,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Budweiser
 ## Executive Summary
-### The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  The insights are based on the ABV and IBU content by State.
-### 
-
+### The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  
+###Our insights that we are sharing are based on the ABV and IBU content by State.
+###Our review recommends that the following  opportuntities that your company should consider
+###   1) XXX
+###   2) YYY
 
 ```{r load packages}
 #load different libraries and function to enable us to complete this analysis
