@@ -11,14 +11,28 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Budweiser
 ## Executive Summary
-### This is the executive summary
+### The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  The insights are based on the ABV and IBU content 
+
+
+```{r load packages}
+#load different libraries and function to enable us to complete this analysis
+library(readr)
+library(tidyr) #enables piping
+library(dplyr)#enables enhancement to cleanse data
+library(ggplot2)
+library(caret) #enaables classfication and regression training
+library(e1071)
 
 
 
+```
 
 ```{r load data sets}
+#uploads the data into R to start analysis
+#shijo can you take the link of where we pull the CSV directly from Github?
 
-library(readr)
+
+
 Breweries <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Breweries.csv", show_col_types = FALSE) 
 View(Breweries)
 Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_types = FALSE)
@@ -29,37 +43,46 @@ Beers <- read_csv("D:/SMU/6306 Doing Data Science/DEA1/Beers.csv", show_col_type
 
 
 ```{r 1. How many breweries are present in each state}
+#This code will identify the number of breweries for each state
 #How many Breweries are in each state?
-
-
 
 
 ```
 
 
 ```{r 2&3. Data Merge and clean}
+#This code will merge the Data with assigning each beer with the brewery and location
+
 #Merge Data
 
 
 
-#Clean data
+#Cleanse data
+#need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
 
 
 ```
 
-```{r 3. Median of alcohol content and bitterness by each state.}
-#Table and bar chart of alcohol 
+```{r 4. Median of alcohol content and bitterness by each state.}
+#This code will create a table of Medians for ABV and IBU for each state and graphically display a bar chart (how would a bar chart do that? wouldn't a box plot be better? Question to ask)
+#Table and bar chart of alcohol
 
 
 
 ```
 
-## Including Plots
+```{r 5. Which state has the maximum alcoholic (ABV) beer? Which state has the most bitter (IBU) beer?}
+#This code will identify which State has the highest ABV and IBU beers.
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r 6.Comment on the summary statistics and distribution of the ABV variable.}
+#This code will create a summary statistic of the ABV variable
+
+
+```
+
+
+```r 7. 
