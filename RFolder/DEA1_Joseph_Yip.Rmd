@@ -131,7 +131,40 @@ bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(AB
 ```
 
 
-```{r 7. Shijo magic}
+```{r 7. Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer}
+# Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer
+
+bbdf_clean %>% ggplot(mapping = aes(x = ABV, y = IBU)) + geom_point(mapping = aes(x = ABV, y = IBU, color = State), position = "jitter") +  geom_smooth(method='lm', formula= y~x) + ggtitle("ABV vs IBU") + xlab("ABV") + ylab("IBU") 
+
+# there is a linear positive correlation between ABV and IBU based on the linear model of the data set.
+
+
+
+```
+
+```{r 8..  Budweiser would also like to investigate the difference with respect to IBU and ABV between IPAs (India Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA).  You decide to use KNN classification to investigate this relationship.  Provide statistical evidence one way or the other. You can of course assume your audience is comfortable with percentages … KNN is very easy to understand conceptually. }
+
+
+# 
+
+
+
+# there is a linear positive correlation between ABV and IBU based on the linear model of the data set.
+
+
+
+```
+
+
+```{r 9..  Knock their socks off!  Find one other useful inference from the data that you feel Budweiser may be able to find value in.  You must convince them why it is important and back up your conviction with appropriate statistical evidence.  }
+
+
+# 
+
+
+
+# there is a linear positive correlation between ABV and IBU based on the linear model of the data set.
+
 
 
 ```
