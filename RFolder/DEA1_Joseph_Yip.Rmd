@@ -69,9 +69,8 @@ bbdf <- merge(Beers,Breweries, by = "Brew_ID")
 #Cleanse data
 #need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
 
+
 #clean age
-ABV.median <- median(bbdf$ABV, na.rm = TRUE)
-bbdf[is.na(bbdf$ABV),"ABV"] <- ABV.median
 
 ```
 
