@@ -26,6 +26,8 @@ library(dplyr)#enables enhancement to cleanse data
 library(ggplot2)
 library(caret) #enaables classfication and regression training
 library(e1071)
+library(class)
+library(stringr)
 
 #how do i not print the code #echo off
 
@@ -76,14 +78,9 @@ bbdf <- merge(Beers,Breweries, by = "Brew_ID")
 #Cleanse data
 #need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
 
-<<<<<<< HEAD
-#clean age
-ABV.median <- median(bbdf$ABV, na.rm = TRUE)
-bbdf[is.na(bbdf$ABV),"ABV"] <- ABV.median
 
-=======
+#clean
 bbdf_clean = na.omit(bbdf)
->>>>>>> ac908a909afb10373ed9c733c8fa394ba62350a3
 ```
 
 ```{r 4. Median of alcohol content and bitterness by each state.}
@@ -161,10 +158,6 @@ bbdf_Ales = bbdf_clean %>% filter(str_detect(Style,"(IPA| Ale)"))
 bbdf_Ales = bbdf_Ales %>% mutate(IPAFlag = case_when(str_detect(bbdf_Ales$Style,"IPA") == TRUE ~ "IPA", TRUE ~ "Other Ales" ))
 
 bbdf_Ales$IPAFlag = as.factor(bbdf_Ales$IPAFlag)
-
-library(class)
-library(caret)
-library(e1071)
 
 # find the best K 
 set.seed(1)
