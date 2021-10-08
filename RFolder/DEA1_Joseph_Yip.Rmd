@@ -16,6 +16,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ###Our review recommends that the following  opportuntities that your company should consider
 ###   1) XXX
 ###   2) YYY
+###   3) ZZZ
 
 ```{r load packages}
 #load different libraries and function to enable us to complete this analysis
