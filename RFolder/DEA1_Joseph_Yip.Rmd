@@ -152,11 +152,60 @@ bbdf_clean %>% ggplot(mapping = aes(x = ABV, y = IBU)) + geom_point(mapping = ae
 ```{r 8..  Budweiser would also like to investigate the difference with respect to IBU and ABV between IPAs (India Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA).  You decide to use KNN classification to investigate this relationship.  Provide statistical evidence one way or the other. You can of course assume your audience is comfortable with percentages … KNN is very easy to understand conceptually. }
 
 
-# 
+
+# building the Ales and IP data frame and creating a flag for OtherAles and IPA 
+
+bbdf_Ales = bbdf_clean %>% filter(str_detect(Style,"(IPA| Ale)"))
+
+bbdf_Ales = bbdf_Ales %>% mutate(IPAFlag = case_when(str_detect(bbdf_Ales$Style,"IPA") == TRUE ~ "IPA", TRUE ~ "Other Ales" ))
+
+bbdf_Ales$IPAFlag = as.factor(bbdf_Ales$IPAFlag)
+
+library(class)
+library(caret)
+library(e1071)
+
+# find the best K 
+set.seed(1)
+iterations = 500
+numks = 90
+splitPerc = .70
+
+masterAcc = matrix(nrow = iterations, ncol = numks)
+
+for(j in 1:iterations)
+{
+  trainIndices = sample(1:dim(bbdf_Ales)[1],round(splitPerc * dim(bbdf_Ales)[1]))
+  train = bbdf_Ales[trainIndices,]
+  test = bbdf_Ales[-trainIndices,]
+  for(i in 1:numks)
+  {
+    classifications = knn(train[,c(4,5)],test[,c(4,5)],train$IPAFlag, prob = TRUE, k = i)
+    CM = confusionMatrix(table(classifications,test$IPAFlag))
+    masterAcc[j,i] = CM$overall[1]
+  }
+  
+}
+
+MeanAcc = colMeans(masterAcc)
 
 
+# find out the best K and accuracy  and plot it
+which.max(MeanAcc)
+max(MeanAcc)
+plot(seq(1,numks,1),MeanAcc, type = "l")
+abline(v = 5, col = 'green')
+abline(h = .8589, col = 'green')
 
-# there is a linear positive correlation between ABV and IBU based on the linear model of the data set.
+     
+# run the knn with the best K
+
+    classifications = knn(train[,c(4,5)],test[,c(4,5)],train$IPAFlag, prob = TRUE, k = 5)
+    CM = confusionMatrix(table(classifications,test$IPAFlag))
+    CM
+  
+
+# Douglas.. can you write up the conclusion here :) 
 
 
 
