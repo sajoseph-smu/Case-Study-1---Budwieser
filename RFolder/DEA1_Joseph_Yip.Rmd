@@ -50,9 +50,15 @@ summary(Beers)
 #How many Breweries are in each state?
 
 SummaryBrewery <- Breweries %>% count(State, sort = TRUE)
-names(SummaryBrewery)[2] <- "Brewery Count"
+names(SummaryBrewery)[2] <- "Brewery_Count"
 #Summary of Breweries 
 SummaryBrewery
+
+# Top 25 States with Most Breweries
+SummaryBrewery %>% head(25) %>% ggplot(mapping = aes(x = reorder(State,-Brewery_Count), y = Brewery_Count, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Brewery Count") + xlab("States") + ylab("Brewery Count") +geom_text(aes(label = format(Brewery_Count,big.mark =',')), position = position_dodge(width = .9), vjust = -.25)
+
+# Bottom 25 States with Most Breweries
+SummaryBrewery %>% tail(25) %>% ggplot(mapping = aes(x = reorder(State,Brewery_Count), y = Brewery_Count, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Brewery Count") + xlab("States") + ylab("Brewery Count") +geom_text(aes(label = format(Brewery_Count,big.mark =',')), position = position_dodge(width = .9), vjust = -.25)
 
 ```
 
@@ -63,18 +69,39 @@ SummaryBrewery
 #Merge Data
 #outer join (keep all observations from both dataframes)
 names(Beers)[5] <- "Brew_ID"
-names(Breweries)[2] <- "Brewery Name"
+names(Breweries)[2] <- "Brewery_Name"
 bbdf <- merge(Beers,Breweries, by = "Brew_ID")
 
 #Cleanse data
 #need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
 
-
+bbdf_clean = na.omit(bbdf)
 ```
 
 ```{r 4. Median of alcohol content and bitterness by each state.}
 #This code will create a table of Medians for ABV and IBU for each state and graphically display a bar chart (how would a bar chart do that? wouldn't a box plot be better? Question to ask)
 #Table and bar chart of alcohol
+
+# created a clean table with stats for ABV and IBU
+bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(ABV), Max_ABV=max(ABV), Min_ABV=min(ABV), Median_ABV=median(ABV), Std_ABV=sd(ABV),Mean_IBU=mean(IBU), Max_IBU=max(IBU), Min_IBU=min(IBU), Median_IBU=median(IBU), Std_IBU=sd(IBU))
+
+# Clean table with Medians for ABV and IBU
+bbdf_clean_Medians = bbdf_clean_stats %>% select(State, Median_ABV, Median_IBU)
+bbdf_clean_Medians
+
+
+# Top 25 States by Median ABV
+bbdf_clean_Medians %>% head(25) %>% ggplot(mapping = aes(x = reorder(State,Median_ABV), y = Median_ABV, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Median ABV") + xlab("States") + ylab("ABV") +ylim(0,.08) +geom_text(aes(label = format(Median_ABV,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
+
+# Bottom 25 States by Median ABV
+bbdf_clean_Medians %>% tail(25) %>% ggplot(mapping = aes(x = reorder(State,-Median_ABV), y = Median_ABV, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Median ABV") + xlab("States") + ylab("ABV") +ylim(0,.08) +geom_text(aes(label = format(Median_ABV,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
+
+
+# Top 25 States by Median IBU
+bbdf_clean_Medians %>% head(25) %>% ggplot(mapping = aes(x = reorder(State,Median_IBU), y = Median_IBU, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Median IBU") + xlab("States") + ylab("IBU") +ylim(0,70) +geom_text(aes(label = format(Median_IBU,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
+
+# Bottom 25 States by Median IBU
+bbdf_clean_Medians %>% tail(25) %>% ggplot(mapping = aes(x = reorder(State,-Median_IBU), y = Median_IBU, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Median IBU") + xlab("States") + ylab("IBU") +ylim(0,70) +geom_text(aes(label = format(Median_IBU,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
 
 
 
@@ -84,11 +111,21 @@ bbdf <- merge(Beers,Breweries, by = "Brew_ID")
 #This code will identify which State has the highest ABV and IBU beers.
 
 
+# State with the max ABV
+bbdf_clean_stats %>% filter(Max_ABV == max(Max_ABV))
+
+#State with the max IBU
+bbdf_clean_stats %>% filter(Max_IBU == max(Max_IBU))
 
 ```
 
 ```{r 6.Comment on the summary statistics and distribution of the ABV variable.}
 #This code will create a summary statistic of the ABV variable
+
+# already have that in the bbdf_clean_stats 
+
+# created a clean table with stats for ABV 
+bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(ABV), Max_ABV=max(ABV), Min_ABV=min(ABV), Median_ABV=median(ABV), Std_ABV=sd(ABV))
 
 
 ```
