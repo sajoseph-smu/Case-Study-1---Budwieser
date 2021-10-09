@@ -215,12 +215,51 @@ abline(h = .8589, col = 'green')
 
 ```{r 9..  Knock their socks off!  Find one other useful inference from the data that you feel Budweiser may be able to find value in.  You must convince them why it is important and back up your conviction with appropriate statistical evidence.  }
 
+# creating a map plot of the counts of IPA's and Other Ales 
+library(ggplot2)
+library(maps)
+library(dplyr)
+library(mapproj)
+
+lookup = data.frame(abb = state.abb, State = state.name)
+bbdf_map = merge(bbdf_Ales, lookup, by.x = "State", by.y = "abb")
+bbdf_map
+colnames(bbdf_map)[1] = "StateCode"
+colnames(bbdf_map)[12] = "State"
+
+bbdf_map$region <- tolower(bbdf_map$State)
+bbdf_map_summary = bbdf_map %>% group_by(region, IPAFlag) %>% summarize(cnt = n(), meanABV = mean(ABV), meanIBU = mean(IBU))
+
+
+
+states <- map_data("state")
+
+
+# below is the code for creating the IPA heat map
+# ------
+map.df <- bbdf_map_summary %>% filter(IPAFlag == "IPA") %>% merge(states, by="region", all.x=T)
+
+map.df <- map.df[order(map.df$order),]
+ggplot(map.df, aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=cnt))+
+  geom_path()+ 
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("IPA Count by State")+
+  coord_map()
+# ------
+
+# below is the code for creating the Other Ales heat map
+
+# ----
+map.df <- bbdf_map_summary %>% filter(IPAFlag == "Other Ales") %>% merge(states, by="region", all.x=T)
+
+map.df <- map.df[order(map.df$order),]
+ggplot(map.df, aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=cnt))+
+  geom_path()+ 
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("Other Ales Count by State")+
+  coord_map()
 
 # 
-
-
-
-# there is a linear positive correlation between ABV and IBU based on the linear model of the data set.
 
 
 
