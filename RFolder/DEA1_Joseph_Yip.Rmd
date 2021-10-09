@@ -219,46 +219,98 @@ library(ggplot2)
 library(maps)
 library(dplyr)
 library(mapproj)
+install.packages("tidycensus")
+library(tidycensus)
+
+census_api_key("60e6bde9f7a79e136e60fbbb59ce47e85938deb5", install = TRUE)
+readRenviron("~/.Renviron")
+
+
+
+
+
 
 lookup = data.frame(abb = state.abb, State = state.name)
-bbdf_map = merge(bbdf_Ales, lookup, by.x = "State", by.y = "abb")
+bbdf_map = merge(bbdf, lookup, by.x = "State", by.y = "abb")
 bbdf_map
 colnames(bbdf_map)[1] = "StateCode"
-colnames(bbdf_map)[12] = "State"
+colnames(bbdf_map)[11] = "State"
 
 bbdf_map$region <- tolower(bbdf_map$State)
-bbdf_map_summary = bbdf_map %>% group_by(region, IPAFlag) %>% summarize(cnt = n(), meanABV = mean(ABV), meanIBU = mean(IBU))
+bbdf_map_summary = bbdf_map %>% group_by(region) %>% summarize(cnt = n(), meanABV = mean(ABV, na.rm = TRUE), meanIBU = mean(IBU,  na.rm = TRUE))
 
 
+# Getting population data from the ACS for 5 year ( latest year is 2019)
+v19 <- load_variables(2019, "acs5")
+pop2019 = get_acs(geography = "state", variable = "B01003_001", year = 2019)
+ 
+# creating a region and a per 100K count for population estimate
+pop2019$region = tolower(pop2019$NAME)
+pop2019$per100k = pop2019$estimate / 100000
+
+
+bbdf_map_summary2 = bbdf_map_summary %>% merge(pop2019[, c("region","per100k")], by="region", all.x=T)
+
+bbdf_map_summary2$perCapita = bbdf_map_summary2$cnt / bbdf_map_summary2$per100k 
 
 states <- map_data("state")
-
-
-# below is the code for creating the IPA heat map
-# ------
-map.df <- bbdf_map_summary %>% filter(IPAFlag == "IPA") %>% merge(states, by="region", all.x=T)
+map.df <- bbdf_map_summary2 %>% merge(states, by="region", all.x=T)
 
 map.df <- map.df[order(map.df$order),]
+
+# below is the code for creating the Mean ABV by State
+# ------
+
 ggplot(map.df, aes(x=long,y=lat,group=group))+
-  geom_polygon(aes(fill=cnt))+
+  geom_polygon(aes(fill= meanABV))+
   geom_path()+ 
-  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("IPA Count by State")+
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("Mean ABV by State")+
   coord_map()
 # ------
 
 # below is the code for creating the Other Ales heat map
 
 # ----
-map.df <- bbdf_map_summary %>% filter(IPAFlag == "Other Ales") %>% merge(states, by="region", all.x=T)
 
-map.df <- map.df[order(map.df$order),]
 ggplot(map.df, aes(x=long,y=lat,group=group))+
-  geom_polygon(aes(fill=cnt))+
+  geom_polygon(aes(fill=meanIBU))+
   geom_path()+ 
-  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("Other Ales Count by State")+
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle(" Mean IBU by State")+
   coord_map()
 
 # 
+
+
+
+# below is the code for creating the Beer Count heat map
+
+# ----
+
+ggplot(map.df, aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=cnt))+
+  geom_path()+ 
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("Beer Count by State")+
+  coord_map()
+
+# 
+
+
+# below is the code for creating the Beer Count heat map
+
+# ----
+
+ggplot(map.df, aes(x=long,y=lat,group=group))+
+  geom_polygon(aes(fill=perCapita))+
+  geom_path()+ 
+  scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle("Per Capita by State")+
+  coord_map()
+
+# 
+
+
+
+
+
 
 
 
