@@ -73,6 +73,12 @@ names(Beers)[5] <- "Brew_ID"
 names(Breweries)[2] <- "Brewery_Name"
 bbdf <- merge(Beers,Breweries, by = "Brew_ID")
 
+#Head
+bbdf %>% head(6)
+
+#tail
+bbdf %>% tail(6)
+
 #Cleanse data
 #need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
 
