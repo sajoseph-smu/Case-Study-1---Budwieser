@@ -151,6 +151,11 @@ bbdf_clean %>% filter(IBU == max(IBU))
 bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(ABV), Max_ABV=max(ABV), Min_ABV=min(ABV), Median_ABV=median(ABV), Std_ABV=sd(ABV))
 bbdf_clean %>% ggplot(aes(x=ABV)) + geom_histogram() + labs(title = "Histogram of Beers ABV")
 
+bbdf_clean %>% ggplot(aes(x=ABV)) + geom_boxplot() + labs(title = "Boxplot of Beers ABV")
+
+#summary statistics of ABV 
+summary(bbdf_clean$ABV)
+
 ```
 ### 6 Answer.  The ABV distribution shows a right skewed distribution with medians centering around 5% ABV.
 
