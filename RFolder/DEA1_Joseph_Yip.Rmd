@@ -9,46 +9,47 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Budweiser
-## Executive Summary
-### The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  
-###Our insights that we are sharing are based on the ABV and IBU content by State.
-###Our review recommends that the following  opportuntities that your company should consider
-###   1) XXX
-###   2) YYY
-###   3) ZZZ
+# Budweiser
 
-```{r load packages}
+## Executive Summary
+
+The purpose of this review is to provide you white space options based on the category insights to 558 Breweries across the US.  
+Our insights that we are sharing are based on the ABV and IBU content by State.
+Our review recommends that the following  opportuntities that your company should consider
+  1) XXX
+  2) YYY
+  3) ZZZ
+
+```{r load packages setup, include=FALSE}
 #load different libraries and function to enable us to complete this analysis
 library(readr)
 library(tidyr) #enables piping
 library(dplyr)#enables enhancement to cleanse data
 library(ggplot2)
-library(caret) #enaables classfication and regression training
+library(caret) #enables classification and regression training
 library(e1071)
 library(class)
 library(stringr)
 
-#how do i not print the code #echo off
+
 
 ```
 
 ```{r load data sets}
-#uploads the data into R to start analysis
-#shijo can you take the link of where we pull the CSV directly from Github?
+#uploads the data into R to start analysis from Github
 
-Breweries <- read_csv("https://raw.githubusercontent.com/sajoseph-smu/Case-Study-1---Budwieser/main/Breweries.csv", show_col_types = FALSE) 
+Breweries <- read.csv("https://raw.githubusercontent.com/sajoseph-smu/Case-Study-1---Budwieser/main/Breweries.csv", header = T) 
 
 summary(Breweries)
-Beers <- read_csv("https://raw.githubusercontent.com/sajoseph-smu/Case-Study-1---Budwieser/main/Beers.csv", show_col_types = FALSE)
+Beers <- read.csv("https://raw.githubusercontent.com/sajoseph-smu/Case-Study-1---Budwieser/main/Beers.csv", header = T)
 summary(Beers)
 
 ```
 
 
 
-
-```{r 1. How many breweries are present in each state}
+### 1. How many breweries are present in each state?
+```{r }
 #This code will identify the number of breweries for each state
 #How many Breweries are in each state?
 
@@ -58,15 +59,21 @@ names(SummaryBrewery)[2] <- "Brewery_Count"
 SummaryBrewery
 
 # Top 25 States with Most Breweries
-SummaryBrewery %>% head(25) %>% ggplot(mapping = aes(x = reorder(State,-Brewery_Count), y = Brewery_Count, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Brewery Count") + xlab("States") + ylab("Brewery Count") +geom_text(aes(label = format(Brewery_Count,big.mark =',')), position = position_dodge(width = .9), vjust = -.25)
+
+
+top_n(SummaryBrewery,25,Brewery_Count) %>% ggplot(mapping = aes(x = reorder(State,-Brewery_Count), y = Brewery_Count, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Brewery Count") + xlab("States") + ylab("Brewery Count") +geom_text(aes(label = format(Brewery_Count,big.mark =',')), position = position_dodge(width = .9), vjust = -.25)
+
 
 # Bottom 25 States with Most Breweries
-SummaryBrewery %>% tail(25) %>% ggplot(mapping = aes(x = reorder(State,Brewery_Count), y = Brewery_Count, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Brewery Count") + xlab("States") + ylab("Brewery Count") +geom_text(aes(label = format(Brewery_Count,big.mark =',')), position = position_dodge(width = .9), vjust = -.25)
+
+
+top_n(SummaryBrewery,25,-Brewery_Count) %>% ggplot(mapping = aes(x = reorder(State,Brewery_Count), y = Brewery_Count, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Brewery Count") + xlab("States") + ylab("Brewery Count") +geom_text(aes(label = format(Brewery_Count,big.mark =',')), position = position_dodge(width = .9), vjust = -.25)
+
 
 ```
 
-
-```{r 2&3. Data Merge and clean}
+### 2.   Merge beer data with the breweries data. Print the first 6 observations and the last six observations to check the merged file.  
+```{r }
 #This code will merge the Data with assigning each beer with the brewery and location
 
 #Merge Data
@@ -80,18 +87,21 @@ bbdf %>% head(6)
 
 #tail
 bbdf %>% tail(6)
+```
 
+
+### 3.   Address the missing values in each column.
+``` {r}
 #Cleanse data
-#need to figure out how to fill in the IBU, I thnk we can use Style and ABV to formulate the IBU for those empty spots
-
-
-#clean
+#We chose to omit the NA records as a method to clean the data
 bbdf_clean = na.omit(bbdf)
 ```
 
-```{r 4. Median of alcohol content and bitterness by each state.}
-#This code will create a table of Medians for ABV and IBU for each state and graphically display a bar chart (how would a bar chart do that? wouldn't a box plot be better? Question to ask)
-#Table and bar chart of alcohol
+
+### 4. Median of alcohol content and bitterness by each state.
+```{r }
+#This code will create a table of Medians for ABV and IBU for each state and graphically display a bar chart 
+
 
 # created a clean table with stats for ABV and IBU
 bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(ABV), Max_ABV=max(ABV), Min_ABV=min(ABV), Median_ABV=median(ABV), Std_ABV=sd(ABV),Mean_IBU=mean(IBU), Max_IBU=max(IBU), Min_IBU=min(IBU), Median_IBU=median(IBU), Std_IBU=sd(IBU))
@@ -102,35 +112,39 @@ bbdf_clean_Medians
 
 
 # Top 25 States by Median ABV
-bbdf_clean_Medians %>% head(25) %>% ggplot(mapping = aes(x = reorder(State,Median_ABV), y = Median_ABV, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Median ABV") + xlab("States") + ylab("ABV") +ylim(0,.08) +geom_text(aes(label = format(Median_ABV,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
+top_n(bbdf_clean_Medians,25,Median_ABV) %>% ggplot(mapping = aes(x = reorder(State,Median_ABV), y = Median_ABV, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Median ABV") + xlab("States") + ylab("ABV") +ylim(0,.08) +geom_text(aes(label = format(Median_ABV,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
 
 # Bottom 25 States by Median ABV
-bbdf_clean_Medians %>% tail(25) %>% ggplot(mapping = aes(x = reorder(State,-Median_ABV), y = Median_ABV, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Median ABV") + xlab("States") + ylab("ABV") +ylim(0,.08) +geom_text(aes(label = format(Median_ABV,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
-
+top_n(bbdf_clean_Medians,25,-Median_ABV) %>% ggplot(mapping = aes(x = reorder(State,-Median_ABV), y = Median_ABV, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Median ABV") + xlab("States") + ylab("ABV") +ylim(0,.08) +geom_text(aes(label = format(Median_ABV,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
 
 # Top 25 States by Median IBU
-bbdf_clean_Medians %>% head(25) %>% ggplot(mapping = aes(x = reorder(State,Median_IBU), y = Median_IBU, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Median IBU") + xlab("States") + ylab("IBU") +ylim(0,70) +geom_text(aes(label = format(Median_IBU,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
+top_n(bbdf_clean_Medians,25,Median_IBU) %>%  ggplot(mapping = aes(x = reorder(State,Median_IBU), y = Median_IBU, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Top 25 States by Median IBU") + xlab("States") + ylab("IBU") +ylim(0,70) +geom_text(aes(label = format(Median_IBU,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
 
 # Bottom 25 States by Median IBU
-bbdf_clean_Medians %>% tail(25) %>% ggplot(mapping = aes(x = reorder(State,-Median_IBU), y = Median_IBU, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Median IBU") + xlab("States") + ylab("IBU") +ylim(0,70) +geom_text(aes(label = format(Median_IBU,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
-
-
+top_n(bbdf_clean_Medians,25,-Median_IBU) %>% ggplot(mapping = aes(x = reorder(State,-Median_IBU), y = Median_IBU, fill = State)) + geom_bar(stat = 'identity') + ggtitle("Bottom 25 States by Median IBU") + xlab("States") + ylab("IBU") +ylim(0,70) +geom_text(aes(label = format(Median_IBU,big.mark =',')), position = position_dodge(width = .6), hjust = -.25) + coord_flip()
 
 ```
 
-```{r 5. Which state has the maximum alcoholic (ABV) beer? Which state has the most bitter (IBU) beer?}
+### 5. Which state has the maximum alcoholic (ABV) beer? Which state has the most bitter (IBU) beer?
+```{r }
 #This code will identify which State has the highest ABV and IBU beers.
 
 
 # State with the max ABV
-bbdf_clean_stats %>% filter(Max_ABV == max(Max_ABV))
+bbdf_clean %>% filter(ABV == max(ABV))
+
+#KY has the Max ABV of .125 based on London Balling from the Against the Grain Brewery
 
 #State with the max IBU
-bbdf_clean_stats %>% filter(Max_IBU == max(Max_IBU))
+bbdf_clean %>% filter(IBU == max(IBU))
 
+
+#OR has the Max IBU of 138 based on the Bitter Bitch Imperial IPA from the Astoria Brewing Company
 ```
 
-```{r 6.Comment on the summary statistics and distribution of the ABV variable.}
+
+### 6.Comment on the summary statistics and distribution of the ABV variable.
+```{r }
 #This code will create a summary statistic of the ABV variable
 
 # already have that in the bbdf_clean_stats 
@@ -141,9 +155,10 @@ bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(AB
 
 ```
 
+### 7. Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer
+```{r }
 
-```{r 7. Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer}
-# Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer
+# Scatter Plot to show relationship for the ABV and IBU
 
 bbdf_clean %>% ggplot(mapping = aes(x = ABV, y = IBU)) + geom_point(mapping = aes(x = ABV, y = IBU, color = State), position = "jitter") +  geom_smooth(method='lm', formula= y~x) + ggtitle("ABV vs IBU") + xlab("ABV") + ylab("IBU") 
 
@@ -153,7 +168,10 @@ bbdf_clean %>% ggplot(mapping = aes(x = ABV, y = IBU)) + geom_point(mapping = ae
 
 ```
 
-```{r 8..  Budweiser would also like to investigate the difference with respect to IBU and ABV between IPAs (India Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA).  You decide to use KNN classification to investigate this relationship.  Provide statistical evidence one way or the other. You can of course assume your audience is comfortable with percentages … KNN is very easy to understand conceptually. }
+
+
+### 8.  Budweiser would also like to investigate the difference with respect to IBU and ABV between IPAs (India Pale Ales) and other types of Ale (any beer with “Ale” in its name other than IPA).  You decide to use KNN classification to investigate this relationship.  Provide statistical evidence one way or the other. You can of course assume your audience is comfortable with percentages … KNN is very easy to understand conceptually.
+```{r  }
 
 
 
@@ -167,8 +185,8 @@ bbdf_Ales$IPAFlag = as.factor(bbdf_Ales$IPAFlag)
 
 # find the best K 
 set.seed(1)
-iterations = 500
-numks = 90
+iterations = 100
+numks = 15
 splitPerc = .70
 
 masterAcc = matrix(nrow = iterations, ncol = numks)
@@ -199,6 +217,7 @@ abline(h = .8589, col = 'green')
 
      
 # run the knn with the best K
+# K = 5
 
     classifications = knn(train[,c(4,5)],test[,c(4,5)],train$IPAFlag, prob = TRUE, k = 5)
     CM = confusionMatrix(table(classifications,test$IPAFlag))
@@ -211,19 +230,21 @@ abline(h = .8589, col = 'green')
 
 ```
 
-
-```{r 9..  Knock their socks off!  Find one other useful inference from the data that you feel Budweiser may be able to find value in.  You must convince them why it is important and back up your conviction with appropriate statistical evidence.  }
+### 9..  Knock their socks off!  Find one other useful inference from the data that you feel Budweiser may be able to find value in.  You must convince them why it is important and back up your conviction with appropriate statistical evidence. 
+```{r  }
 
 # creating a map plot of the counts of IPA's and Other Ales 
 library(ggplot2)
 library(maps)
 library(dplyr)
 library(mapproj)
-install.packages("tidycensus")
+#install.packages("tidycensus")
 library(tidycensus)
 
-census_api_key("60e6bde9f7a79e136e60fbbb59ce47e85938deb5", install = TRUE)
-readRenviron("~/.Renviron")
+
+## Run the below code if your are changing the census key
+##census_api_key("60e6bde9f7a79e136e60fbbb59ce47e85938deb5", install = TRUE)
+##readRenviron("~/.Renviron")
 
 
 
@@ -278,7 +299,7 @@ ggplot(map.df, aes(x=long,y=lat,group=group))+
   scale_fill_gradientn(colours=rev(heat.colors(10)),na.value="grey90")+ggtitle(" Mean IBU by State")+
   coord_map()
 
-# 
+#--- 
 
 
 
@@ -310,7 +331,7 @@ ggplot(map.df, aes(x=long,y=lat,group=group))+
 
 
 
-
+s
 
 
 
