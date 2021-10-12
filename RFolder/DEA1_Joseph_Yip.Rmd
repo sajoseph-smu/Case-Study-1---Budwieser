@@ -149,10 +149,10 @@ bbdf_clean %>% filter(IBU == max(IBU))
 
 # created a clean table with stats for ABV 
 bbdf_clean_stats = bbdf_clean %>% group_by(State) %>% summarise(Mean_ABV=mean(ABV), Max_ABV=max(ABV), Min_ABV=min(ABV), Median_ABV=median(ABV), Std_ABV=sd(ABV))
-
+bbdf_clean %>% ggplot(aes(x=ABV)) + geom_histogram() + labs(title = "Histogram of Beers ABV")
 
 ```
-### 6 Answer.
+### 6 Answer.  The ABV distribution shows a right skewed distribution with medians centering around 5% ABV.
 
 ### 7. Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer
 ```{r }
