@@ -128,7 +128,7 @@ top_n(bbdf_clean_Medians,25,-Median_IBU) %>% ggplot(mapping = aes(x = reorder(St
 ```
 
 
-### 4 Answer.  The bar charts above visually the Top 25 and bottom 25 states for median ABV and IBU.  
+### 4 Answer.  The bar charts above visually depicts the Top 25 and bottom 25 states for median ABV and IBU.  
 
 
 ### 5. Which state has the maximum alcoholic (ABV) beer? Which state has the most bitter (IBU) beer?
@@ -162,7 +162,7 @@ bbdf_clean %>% ggplot(aes(x=ABV)) + geom_boxplot() + labs(title = "Boxplot of Be
 summary(bbdf_clean$ABV)
 
 ```
-### 6 Answer.  The ABV distribution shows a right skewed distribution with medians centering around 5% ABV.
+### 6 Answer.  The ABV distribution showed a right skewed distribution with a mean at 6% and median at 5.7%.  Most of the beers ABV ranged between 5% to 6.8% (IQR).
 
 ### 7. Is there an apparent relationship between the bitterness of the beer and its alcoholic content? Draw a scatter plot.  Make your best judgment of a relationship and EXPLAIN your answer
 ```{r }
@@ -230,7 +230,7 @@ abline(h = .8589, col = 'green')
     CM
 
 ```
-### 8 Answer.  Before completing the KNN, we identify the best knn to run to acieved 80% accruacy was knn =5.  We split the data 70/30 to create a train and test dataset to complete a knn=5 analysis.  The accruacy of the results was ~85.89%.  This would suggest the the sytle of the Ales are highly dependent on the ABV and IBU classification since we got a accruacy rate of 85.89%.
+### 8 Answer.  Before completing the KNN, we identify the best knn to run to acieved a 80% accruacy.  We identified knn =5.  We split the data 70/30 to create a train and test dataset to complete a knn=5 analysis.  The accruacy of the results was ~85.67%.  This would suggest the the sytle of the Ales are highly dependent on the ABV and IBU classification since we got a accruacy rate of 85.67%.
 
 ### 9.  Knock their socks off!  Find one other useful inference from the data that you feel Budweiser may be able to find value in.  You must convince them why it is important and back up your conviction with appropriate statistical evidence. 
 ```{r  }
@@ -338,4 +338,5 @@ ggplot(map.df, aes(x=long,y=lat,group=group))+
 
 
 ```
-### 9 Answer. 
+### 9 Answer. Our Heat map tool can determine where you have the greatest white space opportunities where we can customize the style of beer by state.  The heat maps identifies opportunities by state for Budweiser to expand it portfolio based on # of Beer Sku per 100,000s capita.  In addition, the heat map can customize, by style of beer, based on the ABV and IBU median preference to optimize consumer preference in each state.
+
