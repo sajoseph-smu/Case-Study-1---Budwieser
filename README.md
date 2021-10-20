@@ -7,6 +7,6 @@ Repository contains the following files for the SMU DS6306 EDA1 project.
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   a) RMD markdown file containing the code and answers to the project <br />
  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   b) HTML of the Final knit file of Rmarkdown file <br />
 5) Power Presentation - EDA1 Case Study - Joseph and Yip (Presentation Format).ppt
-6) Individual Presentations YouTube links - 
-Shijo 
-Douglas - https://youtu.be/QkTayKoNo6g
+6) Individual Presentations YouTube links - <br />
+ &nbsp;Shijo <br />
+ &nbsp;Douglas - https://youtu.be/QkTayKoNo6g<br />
